@@ -62,20 +62,16 @@ def create_accounts():
 ######################################################################
 @app.route("/accounts", methods=["GET"])
 def get_account_list():
-    """Returns all accounts"""
-    app.logger.info("Request for account list")
-    accounts = []
+        """List all AccountsThis endpoint will list all Accounts"""
 
-    accounts = Account.all()
-    if accounts is None:
-        app.logger.info("Returning %d accounts", len(accounts))
-        return accounts
+        app.logger.info("Request to list Accounts")
 
-    results = [account.serialize() for account in accounts]
-    app.logger.info("Returning %d accounts", len(results))
-    return jsonify(results), status.HTTP_200_OK
+        accounts = Account.all()
 
+        account_list = [account.serialize() for account in accounts]
 
+        app.logger.info("Returning [%s] accounts", len(account_list))
+        return jsonify(account_list), status.HTTP_200_OK
 
 
 ######################################################################
@@ -103,24 +99,17 @@ def get_account_by_id(account_id):
 
 @app.route("/accounts/<int:account_id>", methods=["PUT"])
 def update_account(account_id):
-    """
-    Update an Account
-    This endpoint will update an Account based the body that is posted
-    """
-    app.logger.info("Request to update account with id: %s", account_id)
-    check_content_type("application/json")
-
-    account = Account.find(account_id)
-    if not account:
-        abort(status.HTTP_404_NOT_FOUND, f"Account with id '{account_id}' was not found.")
-
-    account.deserialize(request.get_json())
-    account.id = account_id
-    account.update()
-
-    app.logger.info("Account with ID [%s] updated.", account.id)
-    return jsonify(account.serialize()), status.HTTP_200_OK
-
+        """
+        Update an Account
+        This endpoint will update an Account based on the posted data
+        """
+        app.logger.info("Request to update an Account with id: %s", account_id)
+        account = Account.find(account_id)
+        if not account:
+            abort(status.HTTP_404_NOT_FOUND, f"Account with id [{account_id}] could not be found.")       
+        account.deserialize(request.get_json())
+        account.update()
+        return account.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # DELETE AN ACCOUNT

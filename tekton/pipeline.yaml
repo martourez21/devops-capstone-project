@@ -16,23 +16,23 @@ spec:
     - name: branch
       default: main
   tasks:
-    - name: init
+    - name: lint
       workspaces:
         - name: source
           workspace: pipeline-workspace          
       taskRef:
-        name: cleanup
+        name: clone
 
-    - name: clone
+    - name: lint
       workspaces:
-        - name: output
+        - name: source
           workspace: pipeline-workspace          
       taskRef:
-        name: git-clone
+        name: flake8
       params:
-      - name: url
-        value: $(params.repo-url)
-      - name: revision
-        value: $(params.branch)
+      - name: image
+        value: "python:3.9-slim"
+      - name: args
+        value: ["--count","--max-complexity=10","--max-line-length=127","--statistics"]
       runAfter:
-        - init
+        - clone

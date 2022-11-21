@@ -136,16 +136,14 @@ class TestAccountService(TestCase):
         data = response.get_json()
         self.assertEqual(len(data), 5)
 
-
     def test_get_account(self):
-            """It should Get a single Account"""
-            # get the id of a account
-            test_account = self._create_accounts(1)[0]
-            response = self.client.get(f"{BASE_URL}/{test_account.id}")
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            data = response.get_json()
-            self.assertEqual(data["name"], test_account.name)
-
+        """It should Get a single Account"""
+        # get the id of a account
+        test_account = self._create_accounts(1)[0]
+        response = self.client.get(f"{BASE_URL}/{test_account.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(data["name"], test_account.name)
 
     def test_update_account(self):
         """It should Update an existing Account"""
@@ -162,7 +160,6 @@ class TestAccountService(TestCase):
         updated_account = resp.get_json()
         self.assertEqual(updated_account["name"], "martourez")
 
-
     def test_delete_account(self):
         """It should Delete an account"""
         test_account = self._create_accounts(1)[0]
@@ -172,7 +169,6 @@ class TestAccountService(TestCase):
         # make sure they are deleted
         response = self.client.get(f"{BASE_URL}/{test_account.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-
 
     def test_get_account_not_found(self):
         """It should not Read an Account that is not found"""
@@ -200,4 +196,5 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check for the CORS header
         self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
+
         
